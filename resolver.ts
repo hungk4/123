@@ -28,6 +28,34 @@ export const resolvers = {
       await record.save();
 
       return record;
+    },
+    deleteArticle: async (_, args) => {
+      const { id } = args;
+
+      await Article.updateOne({
+        _id: id
+      }, {
+        deleted: true
+      });
+
+      return {
+        code: 200,
+        message: "Xoa thanh cong"
+      };
+    },
+    updateArticle: async (_, args) => {
+      const { id, article } = args;
+
+      await Article.updateOne({
+        _id: id,
+        deleted: false
+      }, article);
+
+      const newArticle = await Article.findOne({
+        _id: id,
+        deleted: false
+      });
+      return newArticle;
     }
   }
 };
