@@ -1,7 +1,5 @@
-import { Query } from "mongoose";
 import Article from "./models/article.model";
 import Category from "./models/category.model";
-import { create } from "domain";
 
 export const resolvers = {
   Query: {
@@ -35,6 +33,16 @@ export const resolvers = {
       });
 
       return category;
+    }
+  },
+  Article: {
+    category: async (article) => {
+      const record = await Category.findOne({
+        _id: article.categoryId,
+        deleted: false
+      });
+
+      return record;
     }
   },
   Mutation: {
