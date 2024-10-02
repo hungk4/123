@@ -5,7 +5,7 @@ import { connectDatabase } from "./config/connectDB";
 import { ApolloServer } from "apollo-server-express";
 
 import { typeDefs } from "./typeDefs/index.typeDefs";
-import { resolvers } from "./resolver";
+import { resolvers } from "./resolvers/index.resolver";
 
 
 const startServer = async () => {
