@@ -37,6 +37,45 @@ export const resolversUser = {
         code: 200,
         message: "Đăng ký thành công!"
       };      
+    },
+    login: async (_, args) => {
+      try{
+        const { user } = args;
+        const email = user.email;
+        const password = md5(user.password);
+        const existUser = await User.findOne({
+          email: email,
+          deleted: false
+        });
+    
+        if(!existUser){
+          return {
+            code: 400,
+            message: "Không tồn tại email trong hệ thống"
+          };
+        }
+    
+        if(existUser.password !== password){
+          return {
+            code: 400,
+            message: "sai mat khau"
+          };
+        }
+        
+        return {
+          code: 200,
+          message: "dang nhap thanh cong",
+          email: existUser.email,
+          token: existUser.token,
+          fullName: existUser.fullName
+        }
+    
+      } catch(e){
+        return {
+          code: 400,
+          message: "not found",
+        };
+      }
     }
   }
 }
