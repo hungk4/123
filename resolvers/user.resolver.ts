@@ -7,9 +7,9 @@ export const resolversUser = {
   Query: {
     getUser: async (_, args) => {
       try {
-        const { id } = args;
+        const { token } = args;
         const user = await User.findOne({
-          _id: id,
+          token: token,
           deleted: false
         });
         if(user) {
@@ -24,7 +24,7 @@ export const resolversUser = {
         } else {
           return {
             code: 400,
-            message: "Id không tồn tại!"
+            message: "token khong hop le"
           }
         }
       } catch (error) {
