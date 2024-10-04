@@ -1,8 +1,40 @@
 import User from "../models/user.model";
 import md5 from "md5";
 import { generateRandomString} from "../helpers/generate.helper"
+import { Query } from "mongoose";
 
 export const resolversUser = {
+  Query: {
+    getUser: async (_, args) => {
+      try {
+        const { id } = args;
+        const user = await User.findOne({
+          _id: id,
+          deleted: false
+        });
+        if(user) {
+          return {
+            id: user.id,
+            fullName: user.fullName,
+            email: user.email,
+            token: user.token,
+            code: 200,
+            message: "Lấy thông tin thành công!"
+          }
+        } else {
+          return {
+            code: 400,
+            message: "Id không tồn tại!"
+          }
+        }
+      } catch (error) {
+        return {
+          code: 400,
+          message: "Id không đúng định dạng!"
+        }
+      }
+    }
+  },
   Mutation: {
     register: async (_, args) => {
       const { user } = args;
@@ -23,7 +55,7 @@ export const resolversUser = {
         fullName: user.fullName,
         email: user.email,
         password: md5(user.password),
-        tokenUser: generateRandomString(30)
+        token: generateRandomString(30)
       };
     
       const newUser = new User(userData);
@@ -61,13 +93,14 @@ export const resolversUser = {
             message: "sai mat khau"
           };
         }
-        
+
         return {
           code: 200,
           message: "dang nhap thanh cong",
           email: existUser.email,
           token: existUser.token,
-          fullName: existUser.fullName
+          fullName: existUser.fullName,
+          id: existUser.id
         }
     
       } catch(e){
